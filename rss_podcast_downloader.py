@@ -13,7 +13,7 @@ from tqdm import tqdm
 def main(url, output='data', start=0, end=-1):
     """ Given an URL to an RSS feed, attempts to download all audio files
     from said feed into the specified folder. """
-    feed = feedparser.parse()
+    feed = feedparser.parse(url)
 
     # if the folder doesn't exist, create it
     if not os.path.isdir(f'{os.getcwd()}\\{output}\\'):
