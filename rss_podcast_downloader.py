@@ -3,8 +3,9 @@ __author__ = 'lgnus'
 import begin
 import feedparser
 import requests
+import sys, signal
 import re
-import os
+from pathlib import Path
 from tqdm import tqdm
 
 
@@ -12,12 +13,26 @@ from tqdm import tqdm
 @begin.convert(url=str, output=str, start=int, end=int)
 def main(url, output='data', start=0, end=-1):
     """ Given an URL to an RSS feed, attempts to download all audio files
-    from said feed into the specified folder. """
+    from said feed into the specified folder. 
+    
+    Parameters
+    ----------
+        url : str
+            URL path to the rss podcast
+        output : str
+            Path to download directory, creates folders if they don't exist
+        start : int
+            Start downloading from this number forward (defaults to 0)
+        end : int
+            Stop downloading at this point (defaults to -1 aka all)
+    """
+
     feed = feedparser.parse(url)
+    output_path = Path.cwd() / output
 
     # if the folder doesn't exist, create it
-    if not os.path.isdir(f'{os.getcwd()}\\{output}\\'):
-        os.mkdir(f'{os.getcwd()}\\{output}\\')
+    if not output_path.is_dir():
+        output_path.mkdir()
 
     # if end is not provided, download all of them
     if end < 0:
@@ -35,7 +50,7 @@ def main(url, output='data', start=0, end=-1):
         title = re.sub(r'\W+', ' ', entry.title).strip()
 
         try:
-            with open(f'{os.getcwd()}\\{output}\\{n + start} - {title}.mp3', 'w+b') as file:
+            with open(output_path / f'{n + start} - {title}.mp3', 'w+b') as file:
 
                 # Get only audio links from the feed entry
                 audio_url = [link.href for link in entry.links if link.type == 'audio/mpeg'][0]
@@ -45,7 +60,7 @@ def main(url, output='data', start=0, end=-1):
                 r = requests.get(audio_url)
                 file.write(r.content)
 
-        except BaseException:  # Ignore errors and proceed to next file
+        except BaseException:       # Ignore errors and proceed to next file
             continue
 
     print('Finished!')
