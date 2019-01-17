@@ -1,11 +1,10 @@
 __author__ = 'lgnus'
 
-import begin
-import feedparser
-import requests
-import sys, signal
-import re
+import re, sys
 from pathlib import Path
+import requests
+import feedparser
+import begin
 from tqdm import tqdm
 
 
@@ -59,8 +58,10 @@ def main(url, output='data', start=0, end=-1):
                 tqdm.write(f'  Downloading {entry.title}.mp3')
                 r = requests.get(audio_url)
                 file.write(r.content)
-
-        except BaseException:       # Ignore errors and proceed to next file
+        except KeyboardInterrupt: # cancel downloads
+            print('Downloading canceled by user.')
+            sys.exit()
+        except:       # Ignore errors and proceed to next file
             continue
 
     print('Finished!')
