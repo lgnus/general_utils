@@ -1,5 +1,5 @@
 ## General Utils
-General utilities and scrips I developed for personal use. 
+General utilities and scrips developed for personal use. 
 
 ### rss_podcast_downloader.py : 
 Given an URL to an RSS feed, attempts to download all audio files from said feed.
