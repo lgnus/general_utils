@@ -10,3 +10,8 @@ Sample usage: `python rss_podcast_downloader.py "http://dataskeptic.com/feed.rss
 Given a path to a folder containing several pdfs, attempts to merge them in order to a single pdf.
 
 Sample usage: `python pdf_merge.py '/book_chapters/' 'book_name' --filename 'best_book'`
+
+### audio_convert.py:
+Given a path to a file or folder with audio files, attempts to scale the dBFS volume to a defined range and optionally to a particular file extension.
+
+Sample usage: `python audio_convert.py '/my_music/' -30`
