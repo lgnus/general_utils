@@ -1,19 +1,21 @@
-__author__ = 'lgnus'
-
-import re, sys
+import re
+import sys
+import feedparser
 from pathlib import Path
+from tqdm import tqdm
 import requests
 import feedparser
 import begin
-from tqdm import tqdm
+
+__author__ = 'lgnus'
 
 
 @begin.start
 @begin.convert(url=str, output=str, start=int, end=int)
 def main(url, output='data', start=0, end=-1):
     """ Given an URL to an RSS feed, attempts to download all audio files
-    from said feed into the specified folder. 
-    
+    from said feed into the specified folder.
+
     Parameters
     ----------
         url : str
@@ -39,6 +41,7 @@ def main(url, output='data', start=0, end=-1):
 
     # Obtain each feed entry ordered by date
     reversed_entries = feed.entries[::-1]
+    failed = {}
     for n, entry in tqdm(enumerate(reversed_entries[start:end + 1]), total=end - start):
 
         # Skip iteration if not within bounds
@@ -58,10 +61,17 @@ def main(url, output='data', start=0, end=-1):
                 tqdm.write(f'  Downloading {entry.title}.mp3')
                 r = requests.get(audio_url)
                 file.write(r.content)
-        except KeyboardInterrupt: # cancel downloads
+        except KeyboardInterrupt:  # cancel downloads
             print('Downloading canceled by user.')
             sys.exit()
         except:       # Ignore errors and proceed to next file
+            failed[n] = entry.title
             continue
+
+    # if it failed to donwload any, print them
+    if len(failed > 0):
+        print(f'{15*'='}\nFailed to download the following:\n')
+        [print(f'{k} - {v}') for k, v in failed.items()]
+        print(f'{15*'='}')
 
     print('Finished!')
