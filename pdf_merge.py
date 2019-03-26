@@ -1,10 +1,10 @@
-__author__ = 'lgnus'
-
-import os, re
-
+import os
+import re
 from pathlib import Path
 import begin
 import fitz
+
+__author__ = 'lgnus'
 
 
 def numeric(filepath):

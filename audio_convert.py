@@ -1,10 +1,12 @@
 
-import os, re
+import os
+import re
 from pathlib import Path
 import begin
 
 from tqdm import tqdm
 from pydub import AudioSegment
+
 
 def get_audio_files(path):
     """ Obtains the list of all files ending in *mp3|wav|m4b*
@@ -29,7 +31,7 @@ def get_audio_files(path):
     else:
         print(f'The specified path: {path} is not a valid directory / file') 
     return sounds
-    
+
 
 def scale_and_save_audio(audio_path, output_path, target_dbfs=-40, convert_output=None):
     """ Scales the audio to the provided dBFS and saves the file to output_path.
@@ -61,7 +63,7 @@ def scale_and_save_audio(audio_path, output_path, target_dbfs=-40, convert_outpu
 @begin.start
 @begin.convert(input_path=str, target_dbfs=float, output_path=str, convert_output=str)
 def audio_convert(input_path, target_dbfs, output_path='output', convert_output='mp3'):
-    """ Given an input path and a target dBFS, changes all compatible audio files in the input 
+    """ Given an input path and a target dBFS, changes all compatible audio files in the input
     folder (or file) to the intended dBFS. Can optionally provide an output path for the new
     audio files as well as a different file extension.
 
